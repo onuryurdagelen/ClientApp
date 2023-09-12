@@ -1,0 +1,98 @@
+<div class="d-flex justify-content-center">
+    <div class="col-12 col-md-5">
+        <main class="form-signin">
+            <div class="card">
+                <div class="card-body">
+                    <form 
+                    [formGroup]="registerForm" 
+                    (ngSubmit)="register()" 
+                    autocomplete="off">
+                        <div class="text-center mb-4">
+                            <h3 class="mb-3 font-weight-normal">Register</h3>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input 
+                            id="firstName" 
+                            formControlName="firstName" 
+                            type="text" 
+                            placeholder="First Name" 
+                            class="form-control"
+                            [class.is-invalid]="submitted && registerForm.get('firstName')?.errors"
+                            >
+                            <label for="firstName">First Name</label>
+                            <span class="invalid-feedback" *ngIf="submitted && 
+                            registerForm.get('firstName')?.hasError('required')">
+                                First Name is required.
+                            </span>
+                            <span class="invalid-feedback" *ngIf="submitted && registerForm.get('firstName')?.hasError('minlength')">
+                                First name must be at least 3, and maximum 15 characters
+                            </span>
+                          </div>
+                          <div class="form-floating mb-3">
+                            <input 
+                            formControlName="lastName"  
+                            id="lastName" type="text" 
+                            placeholder="Last Name" 
+                            class="form-control"
+                            [class.is-invalid]="submitted && registerForm.get('lastName')?.errors"
+                            >
+                            <label for="lastName">Last Name</label>
+                            <span class="invalid-feedback" *ngIf="submitted && 
+                            registerForm.get('lastName')?.hasError('required')">
+                                Last Name Name is required.
+                            </span>
+                            <span class="invalid-feedback" *ngIf="submitted && registerForm.get('lastName')?.hasError('minlength')">
+                                Last Name must be at least 3, and maximum 15 characters
+                            </span>
+                          </div>
+                          <div class="form-floating mb-3">
+                            <input 
+                            formControlName="emailAddress" 
+                            id="emailAddress" 
+                            type="email" 
+                            placeholder="Email Address" 
+                            class="form-control"
+                            [class.is-invalid]="submitted && registerForm.get('emailAddress')?.errors"
+                            >
+                            <label for="emailAddress">Email Address</label>
+                            <span class="invalid-feedback" *ngIf="submitted && 
+                            registerForm.get('emailAddress')?.hasError('required')">
+                                Email address is required
+                            </span>
+                            <span class="invalid-feedback" *ngIf="submitted && 
+                            registerForm.get('emailAddress')?.hasError('email')">
+                                Invalid email address
+                            </span>
+                          </div>
+                          <div class="form-floating mb-3">
+                              <input 
+                              formControlName="password" 
+                              id="password" 
+                              type="password" 
+                              placeholder="Password" 
+                              class="form-control"
+                              [class.is-invalid]="submitted && registerForm.get('emailAddress')?.errors"
+                              >
+                              <label for="password" for="inputValid">Password</label>
+                              <span class="invalid-feedback" *ngIf="submitted && 
+                              registerForm.get('password')?.hasError('required')">
+                                  Password is required
+                              </span>
+                              <span class="invalid-feedback" *ngIf="submitted && 
+                              registerForm.get('password')?.hasError('minlength')">
+                              Password must be at least 6, and maximum 15 characters
+                              </span>
+                          </div>
+                            <div class="row">
+                                <div class="col-md-3 m-auto">
+                                    <button class="btn btn-primary w-100">Save</button>
+                                </div>
+                            </div>
+
+                    </form>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+</div>
