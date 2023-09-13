@@ -83,9 +83,14 @@
                               Password must be at least 6, and maximum 15 characters
                               </span>
                           </div>
+                          <div class="form-floating mt-4 px-1" *ngIf="errorMessages.length > 0">
+                                <app-validation-messages [errorMessages]="errorMessages"></app-validation-messages>
+                          </div>
                             <div class="row">
                                 <div class="col-md-3 m-auto">
-                                    <button class="btn btn-primary w-100">Save</button>
+                                    <button 
+                                    class="btn btn-primary w-100"
+                                    >Save</button>
                                 </div>
                             </div>
 
@@ -96,3 +101,17 @@
         </main>
     </div>
 </div>
+
+
+<!-- <ng-container *ngIf="!alertVisible; else newDeb" >
+    [... HERE IS A RESULT 1]
+</ng-container>
+<ng-template #newDeb>
+    <app-sweet-alert></app-sweet-alert>
+    GİRDİ
+</ng-template>
+
+
+<ng-container >
+   
+</ng-container> -->

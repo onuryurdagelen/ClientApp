@@ -5,12 +5,14 @@ import { ValidationMessagesComponent } from './components/errors/validation-mess
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { SweetAlertComponent } from './components/sweet-alert/sweet-alert.component';
 
 @NgModule({
   declarations: [
     NotFoundComponent,
-    ValidationMessagesComponent
+    ValidationMessagesComponent,
+    SweetAlertComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,9 @@ import {HttpClientModule} from '@angular/common/http';
   exports:[
     RouterModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ValidationMessagesComponent,
+    SweetAlertComponent
   ]
 })
 export class SharedModule { }

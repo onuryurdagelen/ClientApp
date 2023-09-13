@@ -9,6 +9,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SharedModule } from './shared/shared.module';
 import { PlayComponent } from './pages/play/play.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { PlayComponent } from './pages/play/play.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    SweetAlert2Module.forRoot(),
     SharedModule
   ],
   providers: [

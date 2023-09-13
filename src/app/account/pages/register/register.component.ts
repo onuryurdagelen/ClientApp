@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../account.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {SweetAlertService } from 'src/app/shared/services/sweet-alert.service';
+import { bindCallback } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +14,9 @@ export class RegisterComponent implements OnInit{
 registerForm:FormGroup = new FormGroup({});
 submitted:boolean = false;
 errorMessages:string[] =[];
+alertVisible:boolean = false;
 constructor(private accountService:AccountService,
+  private sweetAlertService:SweetAlertService,
   private formBuilder:FormBuilder){}
 
   ngOnInit(): void {
@@ -29,16 +33,36 @@ initializeForm(){
 }
 register(){
   this.submitted = true;
+  // this.sweetAlertService.confirmBox({
+  //   icon:'warning',
+  //   html:'Text',
+  //   title:'Title',
+  //   confirmButtonText:'Tamam',
+  //   showCancelButton:true,
+  //   cancelButtonText:'İptal'
+  // });
+
   this.errorMessages = [];
-  console.log(this.registerForm.get('lastName')?.hasError('required'));
-  console.log(this.registerForm.get('lastName')?.errors)
+  this.accountService.register(this.registerForm.value).subscribe({
+    next:((response:any)=>{
+      this.sweetAlertService.infoBox({
+        title:response.value.title,
+        html:response.value.message,
+        icon:'info'
+      })
+    }),
+    error:((error:any)=>{
+      if(error.error.errors){
+        this.errorMessages = error.error.errors;
+      }
+      else {
+        this.errorMessages.push(error.error);
+      }
+      console.log(error)}),
+    complete:(()=> console.log("register process completed!"))
+  });
   if(this.registerForm.valid){
-    console.log("valid");
-    this.accountService.register(this.registerForm.value).subscribe({
-      next:((response:any)=>{console.log(response)}),
-      error:((error:any)=>{console.log(error.error["Message"])}),
-      complete:(()=> console.log("register process completed!"))
-    });
+    
   }
 }
 }

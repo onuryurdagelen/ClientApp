@@ -16,4 +16,7 @@ export class AccountService extends BaseHttpService{
   register(model:RegisterVM):Observable<void>{
     return this.post<RegisterVM,null>(model,"register");
   }
+  login(model:RegisterVM):Observable<void>{
+    return this.post<RegisterVM,null>(model,"login");
+  }
 }
