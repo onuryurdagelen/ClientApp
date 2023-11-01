@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../account.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {SweetAlertService } from 'src/app/shared/services/sweet-alert.service';
-import { bindCallback } from 'rxjs';
+import { bindCallback, take } from 'rxjs';
+import { User } from 'src/app/shared/models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -15,9 +17,20 @@ registerForm:FormGroup = new FormGroup({});
 submitted:boolean = false;
 errorMessages:string[] =[];
 alertVisible:boolean = false;
-constructor(private accountService:AccountService,
+constructor(
+  private accountService:AccountService,
   private sweetAlertService:SweetAlertService,
-  private formBuilder:FormBuilder){}
+  private formBuilder:FormBuilder,
+  private router:Router
+  ){
+    this.accountService.user$.pipe(take(1)).subscribe({
+      next:(user:User | null) => {
+        if(user){
+          this.router.navigateByUrl('/');
+        }
+      }
+    })
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -33,15 +46,6 @@ initializeForm(){
 }
 register(){
   this.submitted = true;
-  // this.sweetAlertService.confirmBox({
-  //   icon:'warning',
-  //   html:'Text',
-  //   title:'Title',
-  //   confirmButtonText:'Tamam',
-  //   showCancelButton:true,
-  //   cancelButtonText:'İptal'
-  // });
-
   this.errorMessages = [];
   this.accountService.register(this.registerForm.value).subscribe({
     next:((response:any)=>{
@@ -61,8 +65,6 @@ register(){
       console.log(error)}),
     complete:(()=> console.log("register process completed!"))
   });
-  if(this.registerForm.valid){
-    
-  }
+  
 }
 }

@@ -19,7 +19,7 @@ export abstract class BaseHttpService {
   
     // Common POST method
     post<TRequest,TResponse>(item: TRequest,actionName:String): Observable<TResponse | void> {
-      return this.http.post<TResponse |void>(this.baseUrl + `/${actionName}`, item);
+      return this.http.post<TResponse |void>(this.baseUrl + `${actionName}`, item);
     }
   
     // Common PUT method
