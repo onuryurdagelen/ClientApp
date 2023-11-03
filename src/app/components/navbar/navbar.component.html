@@ -19,7 +19,7 @@
                     </li>
                 </ul>
             </div>
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" *ngIf="(accountService.user$ | async) === null">
                 <li class="nav-item">
                     <a routerLink="/account/register" routerLinkActive="active" class="nav-link mx-2">Register</a>
                 </li>
@@ -27,6 +27,10 @@
                     <a routerLink="/account/login" routerLinkActive="active" class="nav-link  mx-2">Login</a>
                 </li>
             </ul>
+            <div class="d-flex align-items-center" *ngIf="(accountService.user$ | async) as user">
+                    <a class="text-white" style="text-decoration: none;cursor: pointer;">Hi <span class="h3 text-warning">{{user.firstName | titlecase}}</span></a>
+                    <div class="btn btn-secondary ms-2" (click)="logout()">Logout</div>
+            </div>
         </div>
     </nav>
 </header>
