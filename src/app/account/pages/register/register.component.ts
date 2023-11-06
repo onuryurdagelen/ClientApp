@@ -3,7 +3,7 @@ import { AccountService } from '../../account.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {SweetAlertService } from 'src/app/shared/services/sweet-alert.service';
 import { bindCallback, take } from 'rxjs';
-import { User } from 'src/app/shared/models/user';
+import { User } from 'src/app/shared/models/account/user';
 import { Router } from '@angular/router';
 
 @Component({
@@ -47,24 +47,28 @@ initializeForm(){
 register(){
   this.submitted = true;
   this.errorMessages = [];
-  this.accountService.register(this.registerForm.value).subscribe({
-    next:((response:any)=>{
-      this.sweetAlertService.infoBox({
-        title:response.value.title,
-        html:response.value.message,
-        icon:'info'
-      })
-    }),
-    error:((error:any)=>{
-      if(error.error.errors){
-        this.errorMessages = error.error.errors;
-      }
-      else {
-        this.errorMessages.push(error.error);
-      }
-      console.log(error)}),
-    complete:(()=> console.log("register process completed!"))
-  });
   
+  if(this.registerForm.valid)
+  {
+    this.accountService.register(this.registerForm.value).subscribe({
+      next:((response:any)=>{
+        this.sweetAlertService.infoBox({
+          title:response.value.title,
+          html:response.value.message,
+          icon:'info'
+        })
+      }),
+      error:((error:any)=>{
+        if(error.error.errors){
+          this.errorMessages = error.error.errors;
+        }
+        else {
+          this.errorMessages.push(error.error);
+        }
+        console.log(error)}),
+      complete:(()=> console.log("register process completed!"))
+    });
+    
+  }
 }
 }
