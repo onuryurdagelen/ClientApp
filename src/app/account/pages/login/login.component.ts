@@ -4,7 +4,7 @@ import { AccountService } from '../../account.service';
 import { SweetAlertService } from 'src/app/shared/services/sweet-alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
-import { User } from 'src/app/shared/models/user';
+import { User } from 'src/app/shared/models/account/user';
 
 @Component({
   selector: 'app-login',
@@ -57,8 +57,6 @@ export class LoginComponent {
     if(this.loginForm.valid){
 
     }
-
-
     this.accountService.login(this.loginForm.value).subscribe({
       next:((response:any)=>{
         if(this.returnUrl){
@@ -74,11 +72,19 @@ export class LoginComponent {
           this.errorMessages = error.error.errors;
         }
         else {
-          this.errorMessages.push(error.error);
+          this.errorMessages.push(error.error.Message);
         }
-        console.log(error)}),
+        console.log(this.errorMessages)
+      
+      }),
       complete:(()=> console.log("register process completed!"))
     })
    
+  }
+  reSendEmailConfirmationLink(){
+    this.router.navigateByUrl('/account/send-email/resend-email-confirmation-link')
+  }
+  resetUsernamOrPassword(){
+    
   }
 }

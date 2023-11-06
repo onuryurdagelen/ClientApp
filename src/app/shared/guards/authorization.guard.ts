@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
-import { User } from '../models/user';
+import { User } from '../models/account/user';
 import { Injectable } from '@angular/core';
 
 @Injectable({

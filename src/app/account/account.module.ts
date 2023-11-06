@@ -5,13 +5,19 @@ import { RegisterComponent } from './pages/register/register.component';
 import { RouterModule } from '@angular/router';
 import { AccountRoutingModule } from './account-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
+import { SendEmailComponent } from './send-email/send-email.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ConfirmEmailComponent,
+    SendEmailComponent,
+    ResetPasswordComponent
   ],
   imports: [
     CommonModule,
