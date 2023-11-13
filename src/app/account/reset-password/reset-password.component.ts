@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
 import { User } from 'src/app/shared/models/account/user';
 import { ResetPassword } from 'src/app/shared/models/account/resetPassword';
+import { UserDto } from 'src/app/shared/dtos/userDto';
 
 @Component({
   selector: 'app-reset-password',
@@ -26,7 +27,7 @@ export class ResetPasswordComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.accountService.user$.pipe(take(1)).subscribe({
-      next: (user: User | null) => {
+      next: (user: UserDto | null) => {
         if (user) {
           this.router.navigateByUrl('/');
         } else {

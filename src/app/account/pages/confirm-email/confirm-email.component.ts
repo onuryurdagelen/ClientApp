@@ -5,6 +5,7 @@ import { take } from 'rxjs';
 import { User } from 'src/app/shared/models/account/user';
 import { ConfirmEmail } from 'src/app/shared/models/account/confirmEmail';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { UserDto } from 'src/app/shared/dtos/userDto';
 
 @Component({
   selector: 'app-confirm-email',
@@ -23,9 +24,8 @@ export class ConfirmEmailComponent implements OnInit {
     ){}
   
   ngOnInit(): void {
-    debugger;
     this.accountService.user$.pipe(take(1)).subscribe({
-      next:(user:User | null)=>{
+      next:(user:UserDto | null)=>{
         if(user) //kullanıcı var ise ana sayfaya yönlendir
         this.router.navigateByUrl('/');
         //Kullanıcı yok ise parametreleri al

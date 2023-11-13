@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
 import { User } from 'src/app/shared/models/account/user';
+import { UserDto } from 'src/app/shared/dtos/userDto';
 
 @Component({
   selector: 'app-send-email',
@@ -24,7 +25,7 @@ export class SendEmailComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.accountService.user$.pipe(take(1)).subscribe({
-      next: (user: User | null) => {
+      next: (user: UserDto | null) => {
         if (user) {
           this.router.navigateByUrl('/');
         } else {

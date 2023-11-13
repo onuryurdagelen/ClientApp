@@ -3,6 +3,7 @@ import { Observable, map } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
 import { User } from '../models/account/user';
 import { Injectable } from '@angular/core';
+import { UserDto } from '../dtos/userDto';
 
 @Injectable({
   providedIn:'root'
@@ -18,7 +19,7 @@ export class AuthorizationGuard{
       state:RouterStateSnapshot,
     ):Observable<boolean> {
       return this.accountService.user$.pipe(
-        map((user:User | null)=> {
+        map((user:UserDto | null)=> {
           if(user){
             return true;
           }else {
