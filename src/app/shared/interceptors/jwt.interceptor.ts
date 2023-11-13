@@ -30,7 +30,6 @@ export class JwtInterceptor implements HttpInterceptor {
           return this.accountService.refreshToken(refreshToken.token,refreshToken.userId).pipe(
             switchMap((user:User) => {
               // Update the request with the new access token
-              console.log(user);
               request = this.addToken(request, user.token.accessToken);
               this.accountService.setUser({firstName:user.firstName,lastName:user.lastName,jwt:user.token.accessToken});
               this.accountService.setRefreshToken({token:user.token.refreshToken.token,userId:user.token.refreshToken.userId});
