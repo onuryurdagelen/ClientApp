@@ -3,9 +3,10 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, catchError, switchMap, take } from 'rxjs';
+import { Observable, catchError, from, switchMap, take, throwError } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
 import { User } from '../models/account/user';
 import { TokenService } from '../services/token.service';
@@ -23,19 +24,23 @@ export class JwtInterceptor implements HttpInterceptor {
       request = this.addToken(request,user.jwt);
 
     return next.handle(request).pipe(
-      catchError((error) => {
+      catchError((error:HttpErrorResponse) => {
         if (error.status === 401) {
         const refreshToken =  this.tokenService.getRefreshToken();
         if(refreshToken){
-          return this.accountService.refreshToken(refreshToken.token,refreshToken.userId).pipe(
+          return from(this.accountService.refreshToken(refreshToken.token,refreshToken.userId)).pipe(
             switchMap((user:User) => {
               // Update the request with the new access token
               request = this.addToken(request, user.token.accessToken);
               this.accountService.setUser({firstName:user.firstName,lastName:user.lastName,jwt:user.token.accessToken});
               this.accountService.setRefreshToken({token:user.token.refreshToken.token,userId:user.token.refreshToken.userId});
-
               // Retry the request with the new token
               return next.handle(request);
+            }),
+            catchError(()=> {
+              //force logout çalıştır
+              //hata mesajı gönder.
+              return throwError(()=> new Error('Refresh token failed,logging out...'));
             })
           );
         }
