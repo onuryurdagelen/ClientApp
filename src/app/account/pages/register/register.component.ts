@@ -5,6 +5,7 @@ import {SweetAlertService } from 'src/app/shared/services/sweet-alert.service';
 import { bindCallback, take } from 'rxjs';
 import { User } from 'src/app/shared/models/account/user';
 import { Router } from '@angular/router';
+import { UserDto } from 'src/app/shared/dtos/userDto';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +25,7 @@ constructor(
   private router:Router
   ){
     this.accountService.user$.pipe(take(1)).subscribe({
-      next:(user:User | null) => {
+      next:(user:UserDto | null) => {
         if(user){
           this.router.navigateByUrl('/');
         }

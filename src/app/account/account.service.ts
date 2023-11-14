@@ -10,15 +10,18 @@ import { User } from '../shared/models/account/user';
 import { Router } from '@angular/router';
 import { ConfirmEmail } from '../shared/models/account/confirmEmail';
 import { ResetPassword } from '../shared/models/account/resetPassword';
+import { RefreshTokenDto, UserDto } from '../shared/dtos/userDto';
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService extends BaseHttpService {
 
-  private userSource = new ReplaySubject<User | null>(1);
+  private userSource = new ReplaySubject<UserDto | null>(1);
+  private refreshTokenSource = new ReplaySubject<RefreshTokenDto | null>(1);
   user$ = this.userSource.asObservable();
+  refreshToken$ = this.refreshTokenSource.asObservable();
 
-  constructor(http: HttpClient,protected router:Router) {
+  constructor(http: HttpClient, protected router: Router) {
     super(http, "/account"); // Provide the base URL
   }
 
@@ -29,30 +32,46 @@ export class AccountService extends BaseHttpService {
     return this.post<LoginVM, User>(model, "/login").pipe(
       map((user: any) => {
         if (user) {
-          this.setUser(user)
+          this.setUser({ firstName: user.firstName, lastName: user.lastName, jwt: user.token.accessToken })
+          this.setRefreshToken({ token: user.token.refreshToken.token, userId: user.token.refreshToken.userId });
         }
       })
     );
   }
-  confirmEmail(confirmEmail:ConfirmEmail){
-    return this.http.put<ConfirmEmail>(`${environment.apiUrl}/account/confirm-email`,confirmEmail);
+  confirmEmail(confirmEmail: ConfirmEmail) {
+    return this.http.put<ConfirmEmail>(`${environment.apiUrl}/account/confirm-email`, confirmEmail);
   }
-  reSendEmailConfirmationLink(emailAddress:string){
-    return this.http.post<any>(`${environment.apiUrl}/account/resend-email-confirmation-link/${emailAddress}`,{});
+  reSendEmailConfirmationLink(emailAddress: string) {
+    return this.http.post<any>(`${environment.apiUrl}/account/resend-email-confirmation-link/${emailAddress}`, {});
   }
-  forgotUsernameOrPassword(emailAddress:string){
-    return this.http.post<any>(`${environment.apiUrl}/account/forgot-username-or-password/${emailAddress}`,{});
+  refreshToken(token: string, userId: string) {
+    return this.http.post<any>(`${environment.apiUrl}/account/refresh-token`, { token: token, userId: userId });
   }
-  resetPassword(resetPassword:ResetPassword){
-    return this.http.put<ResetPassword>(`${environment.apiUrl}/account/reset-password`,resetPassword);
+  forgotUsernameOrPassword(emailAddress: string) {
+    return this.http.post<any>(`${environment.apiUrl}/account/forgot-username-or-password/${emailAddress}`, {});
   }
-  private setUser(user: User) {
+  resetPassword(resetPassword: ResetPassword) {
+    return this.http.put<ResetPassword>(`${environment.apiUrl}/account/reset-password`, resetPassword);
+  }
+  setUser(user: UserDto) {
     localStorage.setItem(environment.userKey, JSON.stringify(user));
     this.userSource.next(user);
   }
-  logout(){
+  setRefreshToken(refreshToken: RefreshTokenDto) {
+    localStorage.setItem(environment.refreshTokenKey, JSON.stringify(refreshToken));
+    this.refreshTokenSource.next(refreshToken);
+  }
+  getRefreshToken(): ReplaySubject<RefreshTokenDto | null> {
+    return this.refreshTokenSource;
+  }
+  getUser(): ReplaySubject<UserDto | null> {
+    return this.userSource;
+  }
+  logout() {
     localStorage.removeItem(environment.userKey);
+    localStorage.removeItem(environment.refreshTokenKey);
     this.userSource.next(null);
+    this.refreshTokenSource.next(null);
     this.router.navigateByUrl('/');
   }
   refreshUser(jwt: string | null) {
@@ -66,7 +85,7 @@ export class AccountService extends BaseHttpService {
     return this.http.get<User>(`${environment.apiUrl}/account/refresh-user-token`, { headers }).pipe(
       map((user: User) => {
         if (user)
-          this.setUser(user);
+          this.setUser({ firstName: user.firstName, lastName: user.lastName, jwt: user.token.accessToken })
       })
     )
 
@@ -74,7 +93,7 @@ export class AccountService extends BaseHttpService {
   getJwtToken(): string | null {
     const key = localStorage.getItem(environment.userKey);
     if (key) {
-      const user: User = JSON.parse(key);
+      const user: UserDto = JSON.parse(key);
       return user.jwt;
     } else {
       return null;

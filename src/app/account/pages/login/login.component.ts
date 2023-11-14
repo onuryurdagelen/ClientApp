@@ -5,6 +5,7 @@ import { SweetAlertService } from 'src/app/shared/services/sweet-alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
 import { User } from 'src/app/shared/models/account/user';
+import { UserDto } from 'src/app/shared/dtos/userDto';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,7 @@ export class LoginComponent {
     private activatedRoute:ActivatedRoute,
     private formBuilder:FormBuilder){
       this.accountService.user$.pipe(take(1)).subscribe({
-        next:(user:User | null) => {
+        next:(user:UserDto | null) => {
           if(user){
             this.router.navigateByUrl('/');
           }else {
